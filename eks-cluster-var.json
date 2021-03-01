@@ -1,0 +1,26 @@
+[
+    {
+        "ParameterKey": "VpcName",
+        "ParameterValue": "Eks-cluster-vpc"
+    },
+    {
+        "ParameterKey": "VpcCidrBlock",
+        "ParameterValue": "10.0.0.0/16"       
+    },
+    {
+        "ParameterKey": "SubnetId",
+        "ParameterValue": "subnet-003780cb515572451"
+    },
+    {
+        "ParameterKey": "SubnetCidrBlock",
+        "ParameterValue": "10.0.0.0/24"       
+    },
+    {
+        "ParameterKey": "ControlPlaneName",
+        "ParameterValue": "eks-controlplane"
+    },
+    {
+        "ParameterKey": "AvailabilityZone",
+        "ParameterValue": "us-east-01"       
+    }
+]

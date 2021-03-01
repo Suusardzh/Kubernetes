@@ -35,7 +35,7 @@ Resources:
       VpcId: !Ref VPC
 
   ###custom routetable###
-  routeTableName:
+  CustomRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
@@ -45,7 +45,7 @@ Resources:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PublicSubnet
-      RouteTableId: !Ref routeTableName
+      RouteTableId: !Ref CustomRouteTable
 
   ###InternetGateway###
 
@@ -60,3 +60,16 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref igwName
+
+  ###RT to IGWY ####
+  RouteToIGW:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref CustomRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref igwName
+  routeTableAssocName:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref CustomRouteTable

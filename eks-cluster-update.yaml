@@ -1,0 +1,178 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  EKS cluster (dedicated VPC: true, dedicated IAM: true) [created and managed by
+  eksctl]  
+
+### Parameters ### 
+
+Parameters:
+  VpcName:
+    Description: Enter VPCName
+    Type: String
+    Default: ''
+  VpcCidrBlock:
+    Description: Enter CidrBlock 
+    Type: String
+    Default: ''
+  SubnetId:
+    Description: Enter SubnetID
+    Type: String
+    Default: ''
+  SubnetCidrBlock:
+    Description: Enter CidrBlock 
+    Type: String
+    Default: ''
+  SubnetCidrBlock:
+    Description: Enter CidrBlock 
+    Type: String
+    Default: ''
+  ControlPlaneName:
+    Description: Enter ControlPlane Name
+    Type: String
+    Default: ''
+  AvailabilityZone:
+    Description: Enter AZ
+    Type: String
+    Default: ''
+
+### Resources ####    
+
+Resources:
+
+  ### Network Resources ###
+
+  ClusterSharedNodeSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Communication between all nodes in the cluster
+      VpcId: !Ref VPC
+  
+  ControlPlane:
+      Type: 'AWS::EKS::Cluster'
+      Properties:
+        Name: ''
+        ResourcesVpcConfig:
+          SecurityGroupIds:
+            - !Ref ControlPlaneSecurityGroup
+          SubnetIds:
+            - !Ref SubnetPublic01
+            - !Ref SubnetPublic02
+        RoleArn: !GetAtt 
+          - ServiceRole
+          - Arn
+        Version: '1.18'
+  
+  ControlPlaneSecurityGroup:
+      Type: 'AWS::EC2::SecurityGroup'
+      Properties:
+        GroupDescription: Communication between the control plane and worker nodegroups
+        VpcId: !Ref VPC
+  
+  IngressNodeToDefaultClusterSG:
+      Type: 'AWS::EC2::SecurityGroupIngress'
+      Properties:
+        Description: Allow unmanaged nodes to communicate with control plane (all ports)
+        FromPort: 0
+        GroupId: !GetAtt 
+          - ControlPlane
+          - ClusterSecurityGroupId
+        IpProtocol: '-1'
+        SourceSecurityGroupId: !Ref ClusterSharedNodeSecurityGroup
+        ToPort: 65535
+  
+  InternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties:
+  
+  NATGateway:
+    Type: 'AWS::EC2::NatGateway'
+    Properties:
+      AllocationId: !GetAtt 
+        - NATIP
+        - AllocationId
+      SubnetId: !Ref SubnetPublic01
+  
+  NATIP:
+    Type: 'AWS::EC2::EIP'
+    Properties:
+      Domain: vpc
+  
+  PublicRouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref VPC
+  
+  PublicSubnetRoute:
+    Type: "AWS::EC2::Route"
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+      RouteTableId: !Ref PublicRouteTable
+    DependsOn:
+      - VPCGatewayAttachment
+  
+  RouteTableAssociationPublic01:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref SubnetPublic01
+  
+  RouteTableAssociationPublic02:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref SubnetPublic02
+  
+  ### IAM Resources ###
+
+  ServiceRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action:
+              - "sts:AssumeRole"
+            Effect: Allow
+            Principal:
+              Service:
+                - !FindInMap
+                  - ServicePrincipalPartitionMap
+                  - !Ref "AWS::Partition"
+                  - EKS
+        Version: 2012-10-17
+      ManagedPolicyArns:
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AmazonEKSClusterPolicy"
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AmazonEKSVPCResourceController"
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}/ServiceRole"
+  
+  SubnetPublic-01:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      AvailabilityZone: ''
+      CidrBlock: ''
+      MapPublicIpOnLaunch: true
+      VpcId: !Ref VPC
+  
+  SubnetPublic-02:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      AvailabilityZone: ''
+      CidrBlock: ''
+      MapPublicIpOnLaunch: true
+      VpcId: !Ref VPC
+  
+  VPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      Name: !Ref VpcName
+      CidrBlock: ''
+  
+  VPCGatewayAttachment:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+
+### Outputs ###
