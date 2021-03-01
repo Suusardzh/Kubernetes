@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: 2010-09-09
+###VPC###
+Description:  creating vpc
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      Tags:
+        - Key: name
+          Value: finance
+   ###puplic subnet ###       
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      Tags:
+        - Key: name
+          Value: Publicsubnet
+      CidrBlock: 10.0.0.1/24
+      AvailabilityZone: us-east-1a
+      VpcId: !Ref VPC
+  ###private subnet###
+  PrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      Tags:
+        - Key: name
+          Value: PrivateSubnet
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: us-east-1b
+      VpcId: !Ref VPC
+  ###custom routetable###
+  routeTableName:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      
+  ###routetable assosioation###
+  routeTableAssocName:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref routeTableName
+  ###InternetGateway###
+  igwName:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: name
+          Value: Internet
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref PublicSubnet
+      InternetGatewayId: !Ref igwName
