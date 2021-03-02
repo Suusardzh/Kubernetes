@@ -1,5 +1,23 @@
-# Kubernetes
-This is a simple kubernetes-based microservices application that will help you to upload an Image with Notes. It is designed as a 2 tier architecture (frontend - nodejs and backend - mongodb). This was originally developed by https://github.com/learnitguide/kubernetes-knote  and modified it for practice purpose only.
+# EKS-Cluster 
+### run command with params
+```
+aws cloudformation create-stack --stack-name ec2-cli --template-body file://Documents/cfn/ec2.yaml --parameters ParameterKey=SubnetType,ParameterValue=PublicSubnet
+```
+
+
+aws cloudformation create-stack --stack-name test --template-body file://ec2-variable.yaml --parameters file://variable.json --capabilities CAPABILITY_IAM
+
+```
+aws cloudformation create-stack --stack-name eks-cluster --template-body file://eks-template.yaml --capabilities CAPABILITY_NAMED_IAM
+```
+
+```
+aws cloudformation delete-stack --stack-name eks-cluster --template-body file://eks-template.yaml --capabilities CAPABILITY_NAMED_IAM
+```
+
+```
+aws cloudformation create-stack --stack-name eks-nodegroup --template-body file://eks-nodegroup.yaml --capabilities CAPABILITY_NAMED_IAM
+```
 
 We can deploy this application in working kubernetes cluster using kubectl commands or using YAML configuration files.
 
@@ -13,11 +31,5 @@ kubectl apply -f mongo.yaml
 
 Recommended Documents for references:
 
-Introduction to Kubernetes - https://www.learnitguide.net/2018/08/what-is-kubernetes-learn-kubernetes.html
 
-Setting up Kubernetes Cluster on CentOS / RedHat - https://www.learnitguide.net/2018/08/install-and-configure-kubernetes-cluster.html
-
-Setting up Kubernetes Cluster on Ubuntu - https://www.learnitguide.net/2020/01/how-to-install-kubernetes-on-ubuntu.html
-
-Write your First Yaml File to deploy application - https://www.learnitguide.net/2018/08/create-kubernetes-yaml-for-deployment.html
 

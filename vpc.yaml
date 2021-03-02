@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 ###VPC###
-Description:  creating vpc
+Description:  creating vpc  
 Resources:
   VPC:
     Type: AWS::EC2::VPC
@@ -73,3 +73,18 @@ Resources:
     Properties:
       SubnetId: !Ref PublicSubnet
       RouteTableId: !Ref CustomRouteTable
+
+  ### Create ec2 #####
+  myEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: virginia-kp
+      ImageId: ami-0915bcb5fa77e4892
+      InstanceType: t2.micro
+      SubnetId: !Ref PublicSubnet
+      
+      
+
+      
+
+      
