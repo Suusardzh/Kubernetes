@@ -74,7 +74,7 @@ Resources:
       SubnetId: !Ref PublicSubnet
       RouteTableId: !Ref CustomRouteTable
 
-  ### Create ec2 #####
+  ### Create ec2 on public subnet#####
   myEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
@@ -84,7 +84,16 @@ Resources:
       SubnetId: !Ref PublicSubnet
       
       
+      
+ ### creating ec2 on private subnet ####
 
+  mydatabase:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: virginia-kp
+      ImageId: ami-0915bcb5fa77e4892
+      InstanceType: t2.micro
+      SubnetId: !Ref PrivateSubnet
       
 
-      
+  
