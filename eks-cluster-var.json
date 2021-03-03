@@ -9,18 +9,26 @@
     },
     {
         "ParameterKey": "SubnetId",
-        "ParameterValue": "subnet-003780cb515572451"
+        "ParameterValue": "publicSubnet1"
+    },
+    {
+        "ParameterKey": "SubnetId",
+        "ParameterValue": "publicSubnet2"
     },
     {
         "ParameterKey": "SubnetCidrBlock",
         "ParameterValue": "10.0.0.0/24"       
     },
     {
-        "ParameterKey": "ControlPlaneName",
-        "ParameterValue": "eks-controlplane"
+        "ParameterKey": "SubnetCidrBlock",
+        "ParameterValue": "10.0.1.0/24"       
     },
     {
         "ParameterKey": "AvailabilityZone",
         "ParameterValue": "us-east-01"       
+    },
+    {
+        "ParameterKey": "ControlPlaneName",
+        "ParameterValue": "eks-cluster"       
     }
 ]

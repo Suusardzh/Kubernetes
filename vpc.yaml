@@ -82,18 +82,14 @@ Resources:
       ImageId: ami-0915bcb5fa77e4892
       InstanceType: t2.micro
       SubnetId: !Ref PublicSubnet
-      
-      
-      
- ### creating ec2 on private subnet ####
-
-  mydatabase:
-    Type: AWS::EC2::Instance
-    Properties:
-      KeyName: virginia-kp
-      ImageId: ami-0915bcb5fa77e4892
-      InstanceType: t2.micro
-      SubnetId: !Ref PrivateSubnet
-      
-
+  # myEC2InstanceSG:
+  #   Type: AWS::EC2::SecurityGroup
+  #   Properties:
+  #     GroupDescription: String security group for myEC2 instance to ssh and http port open       SecurityGroupIngress:
+  #     - IPprotocol: tcp
+  #     - FromPort: '80'
+  #     - ToPort: '80'
+  #     -
+  
+ 
   
