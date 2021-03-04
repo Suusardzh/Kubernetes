@@ -5,14 +5,14 @@ aws cloudformation create-stack --stack-name ec2-cli --template-body file://Docu
 ```
 
 
-aws cloudformation create-stack --stack-name test --template-body file://ec2-variable.yaml --parameters file://variable.json --capabilities CAPABILITY_IAM
+aws cloudformation create-stack --stack-name test --template-body file://eks-cluster-update.yaml --parameters file://eks-cluster-var.json --capabilities CAPABILITY_IAM
 
 ```
 aws cloudformation create-stack --stack-name eks-cluster --template-body file://eks-template.yaml --capabilities CAPABILITY_NAMED_IAM
 ```
 
 ```
-aws cloudformation delete-stack --stack-name eks-cluster --template-body file://eks-template.yaml --capabilities CAPABILITY_NAMED_IAM
+aws cloudformation delete-stack --stack-name eks-2 --template-body file://test.yaml --capabilities CAPABILITY_NAMED_IAM
 ```
 
 ```

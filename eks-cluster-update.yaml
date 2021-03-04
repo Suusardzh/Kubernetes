@@ -1,29 +1,24 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: |
-  EKS cluster (dedicated VPC: true, dedicated IAM: true) [created and managed by
-  eksctl]  
+  EKS cluster  
 
 ### Parameters ### 
 
 Parameters:
-  VpcName:
-    Description: Enter VPCName
-    Type: String
-    Default: ''
   VpcCidrBlock:
     Description: Enter CidrBlock 
     Type: String
     Default: ''
-  SubnetId:
-    Description: Enter SubnetID
+  SubnetName1:
+    Description: Enter SubnetName1
     Type: String
     Default: ''
   SubnetCidrBlock:
     Description: Enter CidrBlock 
     Type: String
     Default: ''
-  SubnetId:
-    Description: Enter SubnetID
+  SubnetName2:
+    Description: Enter SubnetName2
     Type: String
     Default: ''
   SubnetCidrBlock:
@@ -39,21 +34,6 @@ Parameters:
     Type: String
     Default: ''
 
-### mapping ####
-Mappings:
-  ServicePrincipalPartitionMap:
-    aws:
-      EC2: ec2.amazonaws.com
-      EKS: eks.amazonaws.com
-      EKSFargatePods: eks-fargate-pods.amazonaws.com
-    aws-cn:
-      EC2: ec2.amazonaws.com.cn
-      EKS: eks.amazonaws.com
-      EKSFargatePods: eks-fargate-pods.amazonaws.com
-    aws-us-gov:
-      EC2: ec2.amazonaws.com
-      EKS: eks.amazonaws.com
-      EKSFargatePods: eks-fargate-pods.amazonaws.com
 ### Resources ####    
 
 Resources:
@@ -62,13 +42,13 @@ Resources:
   VPC:
     Type: "AWS::EC2::VPC"
     Properties:
-      Name: !Ref VpcName
       CidrBlock: ''
       EnableDnsSupport: true
 
   SubnetPublic1:
     Type: "AWS::EC2::Subnet"
     Properties:
+      Name: !Ref SubnetName1
       AvailabilityZone: ''
       CidrBlock: ''
       MapPublicIpOnLaunch: true
@@ -77,6 +57,7 @@ Resources:
   SubnetPublic2:
     Type: "AWS::EC2::Subnet"
     Properties:
+      Name: !Ref  SubnetName2
       AvailabilityZone: ''
       CidrBlock: ''
       MapPublicIpOnLaunch: true
@@ -133,8 +114,8 @@ Resources:
             - !Ref SubnetPublic1
             - !Ref SubnetPublic2
         RoleArn: !GetAtt 
-          - ServiceRole
-          - Arn
+          - eksClusterRole
+          - arn 
         Version: '1.18'
 
   ClusterSharedNodeSecurityGroup:
@@ -162,30 +143,21 @@ Resources:
         ToPort: 65535
         
   ### IAM Resources ###
-
-  ServiceRole:
-    Type: "AWS::IAM::Role"
+  
+  eksClusterRole:
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
+        Version: '2012-10-17'
         Statement:
-          - Action:
-              - "sts:AssumeRole"
-            Effect: Allow
-            Principal:
-              Service:
-                - !FindInMap
-                  - ServicePrincipalPartitionMap
-                  - !Ref "AWS::Partition"
-                  - EKS
-                - !FindInMap
-                  - ServicePrincipalPartitionMap
-                  - !Ref "AWS::Partition"
-        Version: 2012-10-17
+        - Effect: Allow
+          Principal:
+            Service:
+            - eks.amazonaws.com
+          Action:
+          - sts:AssumeRole
       ManagedPolicyArns:
-        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AmazonEKSClusterPolicy"
-        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AmazonEKSVPCResourceController"
-      Tags:
-        - Key: Name
-          Value: !Sub "${AWS::StackName}/ServiceRole"
+        - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+    
   
 
