@@ -14,6 +14,15 @@ Parameters:
     Type: String
     Default: "10.0.0.0/24"
 
+  PubSubnet2Cidr:
+    Description: PUBLIC SUBNET2 CIDR
+    Type: String
+    Default: "10.0.1.0/24"
+
+  AZPublicsubnet1:
+    Description: az zone in region
+    Type: String
+    Default: "us-east-1a"
 ### Resources ###
 
 Resources:
@@ -28,7 +37,7 @@ Resources:
   SubnetPublic1:
     Type: "AWS::EC2::Subnet"
     Properties:
-      AvailabilityZone: us-east-1a
+      AvailabilityZone: !Ref AZPublicsubnet1
       CidrBlock: !Ref PubSubnet1Cidr
       MapPublicIpOnLaunch: true
       VpcId: !Ref VPC
@@ -37,7 +46,7 @@ Resources:
     Type: "AWS::EC2::Subnet"
     Properties:
       AvailabilityZone: us-east-1c
-      CidrBlock: 10.0.1.0/24
+      CidrBlock: !Ref PubSubnet2Cidr
       MapPublicIpOnLaunch: true
       VpcId: !Ref VPC
 
