@@ -1,17 +1,18 @@
+
 ### Parameters ###
 
 Parameters:
 
 # VPC CIDR
-VpcCidr:
-  Description: VPC CIDR BLOCK
-  Type: String
-  Default: "10.0.0.0/16"
+  VpcCidr:
+    Description: VPC CIDR BLOCK
+    Type: String
+    Default: "10.0.0.0/16"
 
-PubSubnet1Cidr:
-  Description: PUBLIC SUBNET1 CIDR
-  Type: String
-  Default: "10.0.0.0/24"
+  PubSubnet1Cidr:
+    Description: PUBLIC SUBNET1 CIDR
+    Type: String
+    Default: "10.0.0.0/24"
 
 ### Resources ###
 
