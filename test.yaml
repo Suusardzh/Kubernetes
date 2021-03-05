@@ -96,57 +96,57 @@ Resources:
   
 
   
-  # ControlPlane:
-  #     Type: 'AWS::EKS::Cluster'
-  #     Properties:
-  #       ResourcesVpcConfig:
-  #         SecurityGroupIds:
-  #           - !Ref ControlPlaneSecurityGroup
-  #         SubnetIds:
-  #           - !Ref SubnetPublic1
-  #           - !Ref SubnetPublic2
-  #       RoleArn: !GetAtt 
-  #         - eksClusterRole
-  #         - Arn
-  #       Version: '1.18'
+  ControlPlane:
+      Type: 'AWS::EKS::Cluster'
+      Properties:
+        ResourcesVpcConfig:
+          SecurityGroupIds:
+            - !Ref ControlPlaneSecurityGroup
+          SubnetIds:
+            - !Ref SubnetPublic1
+            - !Ref SubnetPublic2
+        RoleArn: !GetAtt 
+          - eksClusterRole
+          - Arn
+        Version: '1.18'
 
-  # ClusterSharedNodeSecurityGroup:
-  #   Type: "AWS::EC2::SecurityGroup"
-  #   Properties:
-  #     GroupDescription: Communication between all nodes in the cluster
-  #     VpcId: !Ref VPC
+  ClusterSharedNodeSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Communication between all nodes in the cluster
+      VpcId: !Ref VPC
   
-  # ControlPlaneSecurityGroup:
-  #     Type: 'AWS::EC2::SecurityGroup'
-  #     Properties:
-  #       GroupDescription: Communication between the control plane and worker nodegroups
-  #       VpcId: !Ref VPC
+  ControlPlaneSecurityGroup:
+      Type: 'AWS::EC2::SecurityGroup'
+      Properties:
+        GroupDescription: Communication between the control plane and worker nodegroups
+        VpcId: !Ref VPC
   
-  # IngressNodeToDefaultClusterSG:
-  #     Type: 'AWS::EC2::SecurityGroupIngress'
-  #     Properties:
-  #       Description: Allow unmanaged nodes to communicate with control plane (all ports)
-  #       FromPort: 0
-  #       GroupId: !GetAtt 
-  #         - ControlPlane
-  #         - ClusterSecurityGroupId
-  #       IpProtocol: '-1'
-  #       SourceSecurityGroupId: !Ref ClusterSharedNodeSecurityGroup
-  #       ToPort: 65535
+  IngressNodeToDefaultClusterSG:
+      Type: 'AWS::EC2::SecurityGroupIngress'
+      Properties:
+        Description: Allow unmanaged nodes to communicate with control plane (all ports)
+        FromPort: 0
+        GroupId: !GetAtt 
+          - ControlPlane
+          - ClusterSecurityGroupId
+        IpProtocol: '-1'
+        SourceSecurityGroupId: !Ref ClusterSharedNodeSecurityGroup
+        ToPort: 65535
         
-  # ### IAM Resources ###
+  ### IAM Resources ###
   
-  # eksClusterRole:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     AssumeRolePolicyDocument:
-  #       Version: '2012-10-17'
-  #       Statement:
-  #       - Effect: Allow
-  #         Principal:
-  #           Service:
-  #           - eks.amazonaws.com
-  #         Action:
-  #         - sts:AssumeRole
-  #     ManagedPolicyArns:
-  #       - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+  eksClusterRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - eks.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
