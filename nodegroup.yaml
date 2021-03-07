@@ -1,0 +1,90 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+### VPC####
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+ ### subnet###     
+  PubSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: us-east-1a
+      CidrBlock: 10.0.0.0/24
+      VpcId:  !Ref VPC
+
+  PrSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: us-east-1b
+      CidrBlock: 10.0.1.0/24
+      VpcId:  !Ref VPC
+  
+
+  ### rt-table ###
+  CustomRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+
+  ### rt-assosiation###
+   
+  routeTableAssocName:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PubSubnet
+      RouteTableId: !Ref CustomRouteTable
+
+  igwName:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: name
+          Value: internet
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref igwName
+
+  ###RT to IGWY ####
+  RouteToIGW:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref CustomRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref igwName
+  routeTableAssocName:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref PubSubnet
+      RouteTableId: !Ref CustomRouteTable
+
+
+  nodegroup:
+    Type: AWS::EKS::Nodegroup
+    Properties:
+      ClusterName: workernode
+      NodeRole: !Ref EKSNodeRole
+      NodegroupName: slave-node
+      Subnets: 
+        - !Ref PubSubnet
+      
+  ### node iam role####
+
+  EKSNodeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+

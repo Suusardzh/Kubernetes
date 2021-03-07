@@ -1,2 +1,6 @@
+After creation cluster we iam authenticate the aws cli and configure kubectl
+
+```
 aws eks --region us-east-1 update-kubeconfig --name ControlPlane-2ub7rmGoqrSh
+```
 
