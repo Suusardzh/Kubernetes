@@ -56,6 +56,8 @@ Resources:
       MapPublicIpOnLaunch: true
       VpcId: !Ref VPC
 
+### RouteTable ####
+
   PublicRouteTable:
     Type: "AWS::EC2::RouteTable"
     Properties:
@@ -81,6 +83,7 @@ Resources:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref SubnetPublic2
 
+### InternetGatway ###
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -94,7 +97,7 @@ Resources:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
   
-
+### ControlPlane ####
   
   ControlPlane:
       Type: 'AWS::EKS::Cluster'
@@ -109,6 +112,8 @@ Resources:
           - eksClusterRole
           - Arn
         Version: '1.18'
+
+  ### Security Groups ####
 
   ClusterSharedNodeSecurityGroup:
     Type: "AWS::EC2::SecurityGroup"
