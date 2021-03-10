@@ -1,76 +1,17 @@
 AWSTemplateFormatVersion: 2010-09-09
 Resources:
-### VPC####
-  VPC:
-    Type: AWS::EC2::VPC
-    Properties:
-      CidrBlock: 10.0.0.0/16
- ### subnet###     
-  PubSubnet:
-    Type: AWS::EC2::Subnet
-    Properties:
-      AvailabilityZone: us-east-1a
-      CidrBlock: 10.0.0.0/24
-      VpcId:  !Ref VPC
 
-  PrSubnet:
-    Type: AWS::EC2::Subnet
-    Properties:
-      AvailabilityZone: us-east-1b
-      CidrBlock: 10.0.1.0/24
-      VpcId:  !Ref VPC
+#### Eks NODE GROUP######
   
-
-  ### rt-table ###
-  CustomRouteTable:
-    Type: AWS::EC2::RouteTable
-    Properties:
-      VpcId: !Ref VPC
-
-  ### rt-assosiation###
-   
-  routeTableAssocName:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref PubSubnet
-      RouteTableId: !Ref CustomRouteTable
-
-  igwName:
-    Type: AWS::EC2::InternetGateway
-    Properties:
-      Tags:
-        - Key: name
-          Value: internet
-  AttachGateway:
-    Type: AWS::EC2::VPCGatewayAttachment
-    Properties:
-      VpcId: !Ref VPC
-      InternetGatewayId: !Ref igwName
-
-  ###RT to IGWY ####
-  RouteToIGW:
-    Type: 'AWS::EC2::Route'
-    Properties:
-      RouteTableId: !Ref CustomRouteTable
-      DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref igwName
-  routeTableAssocName:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
-    Properties:
-      SubnetId: !Ref PubSubnet
-      RouteTableId: !Ref CustomRouteTable
-
-
   nodegroup:
     Type: AWS::EKS::Nodegroup
     Properties:
-      ClusterName: workernode
-      NodeRole: !Ref EKSNodeRole
+      ClusterName: ControlPlane-esg7zdwP5IN0
+      NodeRole: !GetAtt EKSNodeRole.Arn
       NodegroupName: slave-node
       Subnets: 
-        - !Ref PubSubnet
-      
-  ### node iam role####
+        - subnet-0e38c7e573d566ab0
+        - subnet-0d800429868cf6ba0
 
   EKSNodeRole:
     Type: AWS::IAM::Role
@@ -87,4 +28,28 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
-
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+    
+      
+  SG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: >-
+        Communication between the control plane and worker nodes
+      SecurityGroupIngress:
+        - Description: >-
+            [IngressInterCluster] Allow worker nodes
+            communicate with control plane (kubelet and workload TCP ports)
+          FromPort: 1025
+          IpProtocol: tcp
+          SourceSecurityGroupId: sg-0c7b693b1885a83b1
+          ToPort: 65535
+        - Description: >-
+            [IngressInterClusterAPI] Allow worker nodes  to
+            communicate with control plane (workloads using HTTPS port, commonly
+            used with extension API servers)
+          FromPort: 443
+          IpProtocol: tcp
+          SourceSecurityGroupId: sg-0c7b693b1885a83b1
+          ToPort: 443
+      VpcId: vpc-01005f729c44ce62e
