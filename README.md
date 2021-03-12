@@ -44,28 +44,27 @@ aws eks --region us-east-1 update-kubeconfig --name <cluster-name>
 ### We can deploy this application in working ```kubernetes cluster``` using ```kubectl``` commands or using YAML configuration files. ###
 
 
-  #### Frontend ###
+#### Frontend ###
 
-    ```
-    kubectl apply -f knote.yaml
-    ```
+```
+kubectl apply -f knote.yaml
+```
 
-  #### Backend: ###
+#### Backend: ###
 
-    ```
-    kubectl apply -f mongo.yaml
-    ```
-
+```
+kubectl apply -f mongo.yaml
+```
 ### Documentation to read ##
 
-  ```
-  https://docs.amazonaws.cn/en_us/AWSCloudFormation/latest/UserGuide/template-formats.html
-  ```
+```
+https://docs.amazonaws.cn/en_us/AWSCloudFormation/latest/UserGuide/template-formats.html
+```
 
-  ```
-  https://docs.amazonaws.cn/en_us/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-security-group-egress.html
-  ```
+```
+https://docs.amazonaws.cn/en_us/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-security-group-egress.html
+```
 
-  ```
-  https://docs.amazonaws.cn/en_us/eks/latest/userguide/what-is-eks.html
-  ```
+```
+https://docs.amazonaws.cn/en_us/eks/latest/userguide/what-is-eks.html
+```
