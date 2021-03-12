@@ -5,9 +5,9 @@
 ## Prerequisites:
 - aws-cli configured
 - aws-cli 
-```
-https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html#install-macosos-bundled
-```
+
+[AWS-CLI Configuration Documentation](https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html#install-macosos-bundled)
+
 
 ### Deploy ```EKS-cluster``` stack
     
@@ -57,19 +57,13 @@ kubectl apply -f knote.yaml
 ```
 kubectl apply -f mongo.yaml
 ```
-### Documentation to read ##
-
-```
+[Documentation to read] 
 https://docs.amazonaws.cn/en_us/AWSCloudFormation/latest/UserGuide/template-formats.html
-```
 
-```
 https://docs.amazonaws.cn/en_us/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-security-group-egress.html
-```
 
-```
 https://docs.amazonaws.cn/en_us/eks/latest/userguide/what-is-eks.html
-```
+
 
 <img width="550" height="650" src="template1-designer (1).png"> / <img width="280" height="340" src="template1-designer (1) copy.png">
 
