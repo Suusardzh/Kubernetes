@@ -20,7 +20,7 @@ aws cloudformation create-stack --stack-name eks-cluster --template-body file://
 ```
 aws cloudformation create-stack --stack-name eks-nodegroup --template-body file://nodegroup.yaml --capabilities CAPABILITY_NAMED_IAM
 ```
-
+<img width="850" height="360" src="Untitled 2.png"> 
 
 ### Authentication of ```aws-cli``` and configuration of ```kubectl``` 
 
