@@ -69,4 +69,4 @@ https://docs.amazonaws.cn/en_us/AWSCloudFormation/latest/UserGuide/aws-resource-
 https://docs.amazonaws.cn/en_us/eks/latest/userguide/what-is-eks.html
 ```
 
-<img src="template1-designer (1).png">
+<img width="350" height="650" src="template1-designer (1).png">
