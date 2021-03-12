@@ -10,6 +10,9 @@ Resources:
           Value: test-vpc
       CidrBlock: 10.0.0.0/16
       EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}/VPC"
 
    ###puplic subnet ###    
 
@@ -17,19 +20,20 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       Tags:
-        - Key: name
-          Value: public-subnet
+        - Key: Name
+          Value: !Sub "${AWS::StackName}/PublicSubnet"
       CidrBlock: 10.0.0.1/24
       AvailabilityZone: us-east-1a
       VpcId: !Ref VPC
+      
   ###private subnet###
 
   PrivateSubnet:
     Type: AWS::EC2::Subnet
     Properties:
       Tags:
-        - Key: name
-          Value: pr-subnet
+        - Key: Name
+          Value: !Sub "${AWS::StackName}/PrivateSubnet"
       CidrBlock: 10.0.1.0/24
       AvailabilityZone: us-east-1b
       VpcId: !Ref VPC
