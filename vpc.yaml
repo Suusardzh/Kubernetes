@@ -5,9 +5,6 @@ Resources:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
-      Tags:
-        - Key: name
-          Value: test-vpc
       CidrBlock: 10.0.0.0/16
       EnableDnsSupport: true
       Tags:
