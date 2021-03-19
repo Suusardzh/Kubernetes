@@ -6,12 +6,12 @@ Resources:
   nodegroup:
     Type: AWS::EKS::Nodegroup
     Properties:
-      ClusterName: ControlPlane-EvZ84BZpnwGu
+      ClusterName: ControlPlane-29HUXItVw54f
       NodeRole: !GetAtt EKSNodeRole.Arn
       NodegroupName: slave-node
       Subnets: 
-        - subnet-0c3db47d2f2e118f1
-        - subnet-01fb220e5ec89e397
+        - subnet-0f7b479128a73aac8
+        - subnet-08d910431385738d6
 
   EKSNodeRole:
     Type: AWS::IAM::Role
@@ -42,7 +42,7 @@ Resources:
             communicate with control plane (kubelet and workload TCP ports)
           FromPort: 1025
           IpProtocol: tcp
-          SourceSecurityGroupId: sg-05c3d822078bb48df
+          SourceSecurityGroupId: sg-00e6e3f4a3d0c8a70
           ToPort: 65535
         - Description: >-
             [IngressInterClusterAPI] Allow worker nodes  to
@@ -50,6 +50,6 @@ Resources:
             used with extension API servers)
           FromPort: 443
           IpProtocol: tcp
-          SourceSecurityGroupId: sg-05c3d822078bb48df
+          SourceSecurityGroupId: sg-00e6e3f4a3d0c8a70
           ToPort: 443
-      VpcId: vpc-0382681109b3a20d6
+      VpcId: vpc-07c1b1a3a2e670d69
