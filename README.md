@@ -1,6 +1,6 @@
 ## Deploying EKS-Cluster using CloudFormation Templates and AWS-CLI 
 
-<img width="750" height="210" src="what-is-eks.png"> 
+<img width="650" height="210" src="what-is-eks.png"> 
 
 ## Prerequisites:
 - aws-cli configured
